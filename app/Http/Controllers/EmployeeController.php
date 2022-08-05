@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Controller;
+use Illuminate\Validation\Rule;
 use App\Models\Employee;
+use App\Models\Presence;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
@@ -27,9 +31,9 @@ class EmployeeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+
     }
 
     /**
@@ -41,6 +45,23 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         //
+        $rules = [
+            'name' => 'required|string',
+            'role'=> 'string',
+            'nik'=> 'string',
+            'npwp' => 'string',
+            'id_company' => 'required|string',
+            'started' => 'date',
+            'finished'=> 'date',
+
+        ];
+        $validator = Validator::make($request->all(), $rules);
+       
+        $employee = Employee::create($request->all());
+        return response()->json([
+            'status' => 'data added successfully',
+            'data' => $employee,
+        ]);
     }
 
     /**
@@ -49,9 +70,14 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function show(Employee $employee)
+    public function show($id)
     {
-        //
+        
+        $employee = Employee::with('presences')->find($id);
+        return response()->json([
+            'status' => 'data retrieved successfully',
+            'data' => $employee,
+        ]);
     }
 
     /**
@@ -72,9 +98,26 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Employee $employee)
+    public function update(Request $request, $id)
     {
         //
+        $rules = [
+            'name' => 'string',
+            'role'=> 'string',
+            'nik'=> 'string',
+            'npwp' => 'string',
+            'id_company' => 'string',
+            'started' => 'date',
+            'finished'=> 'date',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+        
+        $employee = Employee::findOrFail($id);
+        $employee->update($request->all());
+        return response()->json([
+            'status' => 'data updated successuflly',
+            'data' => $employee,
+        ]);
     }
 
     /**
@@ -83,8 +126,20 @@ class EmployeeController extends Controller
      * @param  \App\Models\Employee  $employee
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Employee $employee)
+    public function destroy($id)
     {
-        //
+        
+        $employee = Employee::find($id);
+        $presences = Presence::where('id_employee', $employee->id)->get()->all();
+
+        foreach($presences as $presence){
+            $presence->delete();
+        }
+        $employee->delete();
+
+        return response()->json([
+            'status' => 'data deleted successuflly',
+            'data' => null,
+        ]);
     }
 }

@@ -17,9 +17,9 @@ class CreateEmployeesTable extends Migration
             $table->id();
             //$table->unsignedBigInteger('id_project');
             //$table->unsignedBigInteger('id_salary');
-            $table->string('id_company');
+            $table->string('id_company')->unique();
             $table->string('name');
-            $table->string('role');
+            $table->string('role')->nullable();
             $table->string('nik')->nullable();
             $table->string('npwp')->nullable();
             $table->date('started')->nullable();

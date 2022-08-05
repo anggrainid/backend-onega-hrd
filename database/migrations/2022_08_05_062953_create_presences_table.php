@@ -18,9 +18,9 @@ class CreatePresencesTable extends Migration
             $table->unsignedBigInteger('id_employee');
             $table->time('check_in')->nullable();
             $table->time('check_out')->nullable();
-            $table->date('date')->nullable();;
-            $table->string('status')->nullable();;
-            $table->boolean('attend')->default(0)->change();
+            $table->date('date')->nullable();
+            $table->string('status')->nullable();
+            $table->boolean('attend')->default(0);
             $table->timestamps();
             $table->softDeletes();
 

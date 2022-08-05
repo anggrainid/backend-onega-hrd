@@ -11,13 +11,12 @@ class Presence extends Model
     use SoftDeletes, HasFactory;
 
     protected $fillable = [
-        'name',
-        'role',
-        'nik',
-        'npwp',
-        'id_company',
-        'started',
-        'finished',
+        'id_employee',
+        'check_in',
+        'check_out',
+        'date',
+        'dstring',
+        'attend',
     ];
 
     public function employee(){

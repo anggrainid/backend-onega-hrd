@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\Controller;
+use Illuminate\Validation\Rule;
 use App\Models\Presence;
 use Illuminate\Http\Request;
 
@@ -29,7 +32,7 @@ class PresenceController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -41,6 +44,21 @@ class PresenceController extends Controller
     public function store(Request $request)
     {
         //
+        $rules = [
+            'id_employee' => 'required|integer',
+            'check_in' => 'time',
+            'check_out'=> 'time',
+            'date'=> 'date',
+            'status'=> 'string',
+            'attend' => 'boolean',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        $presence = Presence::create($request->all());
+        return response()->json([
+            'status' => 'data updated successuflly',
+            'data' => $presence,
+        ]);
     }
 
     /**
@@ -49,9 +67,14 @@ class PresenceController extends Controller
      * @param  \App\Models\Presence  $presence
      * @return \Illuminate\Http\Response
      */
-    public function show(Presence $presence)
+    public function show($id)
     {
         //
+        $presence = Presence::with('employee')->find($id);
+        return response()->json([
+            'status' => 'data retrieved successfully',
+            'data' => $presence,
+        ]);
     }
 
     /**
@@ -72,9 +95,36 @@ class PresenceController extends Controller
      * @param  \App\Models\Presence  $presence
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Presence $presence)
+    public function update(Request $request, $id)
     {
         //
+        $rules = [
+            'id_employee' => 'required|integer',
+            'check_in' => 'time',
+            'check_out'=> 'time',
+            'date'=> 'date',
+            'status'=> 'string',
+            'attend' => 'boolean',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+                $rules = [
+            'id_employee' => 'required|integer',
+            'check_in' => 'time',
+            'check_out'=> 'time',
+            'date'=> 'date',
+            'status'=> 'string',
+            'attend' => 'boolean',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        $presence = Presence::findOrFail($id);
+        $presence->update($request->all());
+        return response()->json([
+            'status' => 'data updated successuflly',
+            'data' => $presence,
+        ]);
+    
     }
 
     /**
@@ -83,8 +133,14 @@ class PresenceController extends Controller
      * @param  \App\Models\Presence  $presence
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Presence $presence)
+    public function destroy($id)
     {
         //
+        $presence = Presence::find($id)->delete();
+
+        return response()->json([
+            'status' => 'data deleted successuflly',
+            'data' => null,
+        ]);
     }
 }
