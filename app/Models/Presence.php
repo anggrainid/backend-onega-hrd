@@ -11,7 +11,7 @@ class Presence extends Model
     use SoftDeletes, HasFactory;
 
     protected $fillable = [
-        'id_employee',
+        'id_user',
         'check_in',
         'check_out',
         'date',
@@ -19,7 +19,7 @@ class Presence extends Model
         'attend',
     ];
 
-    public function employee(){
-        return $this -> belongsTo('App\Models\Employee', 'id_employee','id');
+    public function user(){
+        return $this -> belongsTo('App\Models\User', 'id_user','id');
     }
 }

@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Presence;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Validation\Rule;
-use App\Models\Employee;
-use App\Models\Presence;
 use Illuminate\Http\Request;
 
-class EmployeeController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,10 +19,10 @@ class EmployeeController extends Controller
     public function index()
     {
         //
-        $employee = Employee::with('presences')->get();
+        $user = User::with('presences')->get();
         return response()->json([
             'status' => 'success',
-            'data' => $employee,
+            'data' => $user,
         ]);
     }
 
@@ -57,36 +57,36 @@ class EmployeeController extends Controller
         ];
         $validator = Validator::make($request->all(), $rules);
        
-        $employee = Employee::create($request->all());
+        $user = User::create($request->all());
         return response()->json([
             'status' => 'data added successfully',
-            'data' => $employee,
+            'data' => $user,
         ]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Employee  $employee
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         
-        $employee = Employee::with('presences')->find($id);
+        $user = User::with('presences')->find($id);
         return response()->json([
             'status' => 'data retrieved successfully',
-            'data' => $employee,
+            'data' => $user,
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Employee  $employee
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function edit(Employee $employee)
+    public function edit(User $user)
     {
         //
     }
@@ -95,7 +95,7 @@ class EmployeeController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Employee  $employee
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -112,30 +112,30 @@ class EmployeeController extends Controller
         ];
         $validator = Validator::make($request->all(), $rules);
         
-        $employee = Employee::findOrFail($id);
-        $employee->update($request->all());
+        $user = User::findOrFail($id);
+        $user->update($request->all());
         return response()->json([
             'status' => 'data updated successuflly',
-            'data' => $employee,
+            'data' => $user,
         ]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Employee  $employee
+     * @param  \App\Models\User  $user
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         
-        $employee = Employee::find($id);
-        $presences = Presence::where('id_employee', $employee->id)->get()->all();
+        $user = User::find($id);
+        $presences = Presence::where('id_user', $user->id)->get()->all();
 
         foreach($presences as $presence){
             $presence->delete();
         }
-        $employee->delete();
+        $user->delete();
 
         return response()->json([
             'status' => 'data deleted successuflly',

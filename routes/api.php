@@ -4,8 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PresenceController;
+use App\Http\Controllers\UserController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,7 +26,7 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
-    Route::apiResource('employees', EmployeeController::class);
+    Route::apiResource('users', UserController::class);
 
     Route::apiResource('presences', PresenceController::class);
 

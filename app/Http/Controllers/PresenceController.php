@@ -18,7 +18,7 @@ class PresenceController extends Controller
     public function index()
     {
         //
-        $presence = Presence::with('employee')->get();
+        $presence = Presence::with('user')->get();
         return response()->json([
             'status' => 'success',
             'data' => $presence,
@@ -45,7 +45,7 @@ class PresenceController extends Controller
     {
         //
         $rules = [
-            'id_employee' => 'required|integer',
+            'id_user' => 'required|integer',
             'check_in' => 'time',
             'check_out'=> 'time',
             'date'=> 'date',
@@ -70,7 +70,7 @@ class PresenceController extends Controller
     public function show($id)
     {
         //
-        $presence = Presence::with('employee')->find($id);
+        $presence = Presence::with('user')->find($id);
         return response()->json([
             'status' => 'data retrieved successfully',
             'data' => $presence,
@@ -99,7 +99,7 @@ class PresenceController extends Controller
     {
         //
         $rules = [
-            'id_employee' => 'required|integer',
+            'id_user' => 'required|integer',
             'check_in' => 'time',
             'check_out'=> 'time',
             'date'=> 'date',
@@ -109,7 +109,7 @@ class PresenceController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
                 $rules = [
-            'id_employee' => 'required|integer',
+            'id_user' => 'required|integer',
             'check_in' => 'time',
             'check_out'=> 'time',
             'date'=> 'date',

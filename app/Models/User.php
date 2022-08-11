@@ -21,6 +21,12 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'nik',
+        'npwp',
+        'id_company',
+        'started',
+        'finished',
     ];
 
     /**
@@ -41,4 +47,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function presences(){
+        return $this -> hasMany('App\Models\Presence', 'id_user','id');
+    }
 }

@@ -15,7 +15,7 @@ class CreatePresencesTable extends Migration
     {
         Schema::create('presences', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_employee');
+            $table->unsignedBigInteger('id_user');
             $table->time('check_in')->nullable();
             $table->time('check_out')->nullable();
             $table->date('date')->nullable();
@@ -24,7 +24,7 @@ class CreatePresencesTable extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->foreign('id_employee')->references('id')->on('employees')->onDelete('cascade');
+            $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
