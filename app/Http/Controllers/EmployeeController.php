@@ -19,7 +19,7 @@ class EmployeeController extends Controller
     public function index()
     {
         //
-        $employee = Employee::with('presences')->get();
+        $employee = Employee::with('presences', 'user')->get();
         return response()->json([
             'status' => 'success',
             'data' => $employee,
@@ -57,11 +57,40 @@ class EmployeeController extends Controller
         ];
         $validator = Validator::make($request->all(), $rules);
        
-        $employee = Employee::create($request->all());
+        DB::beginTransaction();
+
+
+        try{
+        $user = New User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = bcrypt($request->password);
+        $user->role ="employee";
+        $user->save();
+        
+            $emp = new Employee();
+            $emp->id_user=$user->id;
+            $emp->position = $request->position;
+            $emp->nik = $request->nik;
+            $emp->npwp = $request->npwp;
+            $emp->id_company = $request->id_company;
+            $emp->started = $request->started;
+            $emp->finished = $request->finished;
+            $emp->save();
+                  
+            
+            DB::commit();
+            return response()->json([
+                'status' => 'data added successfully',
+                'data' => $employee,
+            ]);
+        
+        }catch(\Exception $e){
+        DB::rollback();
         return response()->json([
-            'status' => 'data added successfully',
-            'data' => $employee,
+            'status' => 'data added unsuccess'
         ]);
+        }
     }
 
     /**
@@ -73,7 +102,7 @@ class EmployeeController extends Controller
     public function show($id)
     {
         
-        $employee = Employee::with('presences')->find($id);
+        $employee = Employee::with('presences','user')->find($id);
         return response()->json([
             'status' => 'data retrieved successfully',
             'data' => $employee,
@@ -111,13 +140,29 @@ class EmployeeController extends Controller
             'finished'=> 'date',
         ];
         $validator = Validator::make($request->all(), $rules);
-        
         $employee = Employee::findOrFail($id);
-        $employee->update($request->all());
-        return response()->json([
-            'status' => 'data updated successuflly',
-            'data' => $employee,
+        $user = User::where('id', $employee->id_user)->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+            'role' => "employee",
         ]);
+        if($user){
+            $employee = $employee->update([
+            'nik' => $request->nik,
+            'position' => $request->position,
+            'npwp' => $request->npwp,
+            'id_company' => $request->id_company,
+            'started' => $request->started,
+            'finished' => $request->finished,
+
+            ]);
+            return response()->json([
+                'status' => 'data updated successfully',
+                'data' => $employee,
+            ]);
+        }
+        
     }
 
     /**
@@ -130,12 +175,14 @@ class EmployeeController extends Controller
     {
         
         $employee = Employee::find($id);
+        $user = User::where('id_user', $employee->id_user)->get()->all();
         $presences = Presence::where('id_employee', $employee->id)->get()->all();
 
         foreach($presences as $presence){
             $presence->delete();
         }
         $employee->delete();
+        $user->delete();
 
         return response()->json([
             'status' => 'data deleted successuflly',

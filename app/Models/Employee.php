@@ -12,8 +12,9 @@ class Employee extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'name',
-        'role',
+        'id_user',
+        //'name',
+        'position',
         'nik',
         'npwp',
         'id_company',
@@ -23,5 +24,8 @@ class Employee extends Model
 
     public function presences(){
         return $this -> hasMany('App\Models\Presence', 'id_employee','id');
+    }
+    public function user(){
+        return $this->belongsTo('App\Models\User', 'id_user');
     }
 }

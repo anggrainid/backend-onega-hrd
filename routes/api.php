@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PresenceController;
+use App\Http\Controllers\ApplicantController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,11 +28,25 @@ Route::post('/login', [AuthController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
 
-    Route::apiResource('employees', EmployeeController::class);
-
-    Route::apiResource('presences', PresenceController::class);
-
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
+    Route::apiResource('employees', EmployeeController::class);
+    Route::apiResource('presences', PresenceController::class);
+});
+
+Route::group(['middleware' => ['auth:sanctum', 'ceklevel:admin']], function () {
+
+    Route::apiResource('employees', EmployeeController::class);
+    Route::apiResource('presences', PresenceController::class);
+    Route::apiResource('applicants', ApplicantController::class);
+
+});
+
+
+Route::group(['middleware' => ['auth:sanctum', 'ceklevel:employee']], function () {
+
+    Route::apiResource('employees', EmployeeController::class);
+    Route::apiResource('presences', PresenceController::class);
+
 });
 

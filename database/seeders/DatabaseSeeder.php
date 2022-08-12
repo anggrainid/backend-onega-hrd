@@ -19,11 +19,23 @@ class DatabaseSeeder extends Seeder
     {
         //User::factory(10)->create();
 
+        User::create([
+            "name"=> "Admin",
+            "email"=> "admin@gmail.com",
+            "password"=> bcrypt("12345678"),
+        ]);
+        $emp = User::create([
+            "name"=> "Employee 1",
+            "email"=> "employee@gmail.com",
+            "password"=> bcrypt("12345678"),
+        ]);
+
         $employee = Employee::create([
 
             "id_company" => "FE-121",
-            "name" => "Andi",
-            "role" => "Karyawan",
+            //"name" => "Andi",
+            "id_user" => $emp->id,
+            "position" => "Karyawan",
             "nik" => "3216065408020009",
             "npwp"=> "9958239909",
             "started"=>Carbon::parse('2000-01-01'),
@@ -41,10 +53,5 @@ class DatabaseSeeder extends Seeder
             "attend" => true
         ]);
 
-        User::create([
-            "name"=> "Admin",
-            "email"=> "admin@gmail.com",
-            "password"=> bcrypt("12345678"),
-        ]);
     }
 }
