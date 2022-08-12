@@ -36,8 +36,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 Route::group(['middleware' => ['auth:sanctum', 'ceklevel:admin']], function () {
 
-    Route::apiResource('employees', EmployeeController::class);
-    Route::apiResource('presences', PresenceController::class);
     Route::apiResource('applicants', ApplicantController::class);
 
 });
@@ -45,8 +43,6 @@ Route::group(['middleware' => ['auth:sanctum', 'ceklevel:admin']], function () {
 
 Route::group(['middleware' => ['auth:sanctum', 'ceklevel:employee']], function () {
 
-    Route::apiResource('employees', EmployeeController::class);
-    Route::apiResource('presences', PresenceController::class);
 
 });
 
