@@ -43,6 +43,6 @@ class User extends Authenticatable
     ];
 
     public function employees(){
-        return $this->hasMany('App\Models\Employee', 'id_user');
+        return $this->hasOne('App\Models\Employee', 'id_user');
     }
 }
